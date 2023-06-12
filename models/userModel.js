@@ -6,9 +6,17 @@ import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema({
   fullname: {
     type: String,
-    maxlength: [30, "A fullname must have less or equal then 20 characters"],
-    minlength: [5, "A fullname must have more or equal then 5 characters"],
-    validate: [validator.isAlpha, "Full name must only contain characters"],
+    maxlength: [30, "A fullname must have less than or equal to 30 characters"],
+    minlength: [5, "A fullname must have more than or equal to 5 characters"],
+    validate: [
+      {
+        validator: (value) => {
+          const regex = /^[A-Za-z\s]+$/;
+          return regex.test(value);
+        },
+        message: "Full name must only contain letters and spaces",
+      },
+    ],
     default: "FullName",
   },
   description: {
@@ -31,12 +39,36 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide your email"],
     unique: true,
-    lowercase: true,
     validate: [validator.isEmail, "Email is not valid"],
   },
   techStack: {
     type: [String],
     default: ["Javascript, Python"],
+  },
+  position: {
+    type: String,
+    default: "Developer",
+    maxlength: [
+      20,
+      "A poistion type must have less or equal then 20 characters",
+    ],
+    minlength: [5, "A poistion type must have more or equal then 5 characters"],
+  },
+  githubLink: {
+    type: String,
+    default: "https://github.com/",
+    validate: [validator.isURL, "Link is not valid"],
+  },
+  linkedinLink: {
+    type: String,
+    default: "https://www.linkedin.com/",
+    validate: [validator.isURL, "Link is not valid"],
+  },
+  avatarUrl: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dxkufsejm/image/upload/v1620220366/avatars/default-avatar.png",
+    validate: [validator.isURL, "Link is not valid"],
   },
   password: {
     type: String,
@@ -44,27 +76,11 @@ const userSchema = new mongoose.Schema({
     minLength: 8,
     select: false,
   },
-  passwordConfirm: {
-    type: String,
-    minLength: 8,
-    validate: {
-      validator: function (el) {
-        return this.password === el;
-      },
-      message: "Passwords are not the same",
-    },
-  },
   role: {
     type: String,
-    enum: ["user", "guide", "lead-guide", "admin"],
+    enum: ["user", "admin"],
     default: "user",
   },
-  active: {
-    type: Boolean,
-    default: true,
-    select: false,
-  },
-  //projects ids
 });
 
 userSchema.pre("save", async function (next) {

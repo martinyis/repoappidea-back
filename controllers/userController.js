@@ -16,16 +16,16 @@ export const edit = async (req, res) => {
   try {
     //1) Create error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
-      throw new Error(
-        "This route is not for password updates. Please use /updateMyPassword."
-      );
+      throw new Error("You cannot update password on this route");
     }
     //2) Filtered out unwanted fields names that are not allowed to be updated
     const filteredBody = filterObj(
       req.body,
       "fullname",
-      "username",
-      "email",
+      "position",
+      "avatarUrl",
+      "githubLink",
+      "linkedinLink",
       "description",
       "techStack"
     );
