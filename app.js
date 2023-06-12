@@ -3,6 +3,7 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
 import userRouter from "./routes/userRoutes.js";
+import projectRouter from "./routes/projectRoutes.js";
 const app = express();
 
 if (process.env.NODE_ENV == "development") {
@@ -19,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use('/api/v1/tours', tourRouter);
+app.use("/api/v1/projects", projectRouter);
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {

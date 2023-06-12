@@ -3,7 +3,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import User from "./../models/userModel.js";
 import mongoose from "mongoose";
-const filterObj = (obj, ...allowedFields) => {
+export const filterObj = (obj, ...allowedFields) => {
   const newObject = {};
   Object.keys(obj).forEach((el) => {
     if (allowedFields.includes(el)) {
