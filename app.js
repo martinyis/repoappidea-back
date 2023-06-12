@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
-  console.log("It is wrong route");
+  console.log("SOmehting went wrong");
 });
 
 //export app
