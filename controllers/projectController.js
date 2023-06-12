@@ -128,3 +128,24 @@ export const updateMyProject = async (req, res) => {
     });
   }
 };
+
+//delete my project by id
+export const deleteMyProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (project.author.toString() !== req.user._id.toString()) {
+      throw new Error("You are no the author");
+    }
+    //findbyidanddelete
+    await Project.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
