@@ -1,8 +1,10 @@
-const express = require("express");
-const morgan = require("morgan");
+import express from "express";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import mongoSanitize from "express-mongo-sanitize";
+import userRouter from "./routes/userRoutes.js";
 const app = express();
-const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
+
 if (process.env.NODE_ENV == "development") {
   app.use(morgan("dev"));
 }
@@ -14,15 +16,15 @@ app.use(
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
   next();
 });
 
 // app.use('/api/v1/tours', tourRouter);
-// app.use('/api/v1/users', userRouter);
+app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
   console.log("It is wrong route");
 });
 
-module.exports = app;
+//export app
+export default app;

@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXEPTION");
   console.log(err.name, err.message);
   process.exit(1);
 });
 dotenv.config({ path: "./config.env" });
-const app = require("./app");
+import app from "./app.js";
 
 //==========================DB info===========================//
 //Connect to database
