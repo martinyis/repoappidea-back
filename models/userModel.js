@@ -31,19 +31,19 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, "Please provide your username"],
-    unique: true,
+    unique: [true, "User with this username already exists"],
     maxlength: [20, "A username must have less or equal then 20 characters"],
     minlength: [5, "A username must have more or equal then 5 characters"],
   },
   email: {
     type: String,
     required: [true, "Please provide your email"],
-    unique: true,
+    unique: [true, "User with this email already exists"],
     validate: [validator.isEmail, "Email is not valid"],
   },
   techStack: {
     type: [String],
-    default: ["Javascript, Python"],
+    default: ["Javascript", "Python"],
   },
   position: {
     type: String,

@@ -1,7 +1,10 @@
 import Project from "./../models/projectModel.js";
 import { filterObj } from "./userController.js";
+import User from "../models/userModel.js";
 export const createProject = async (req, res) => {
+  console.log("came here");
   try {
+    //fidn username by req.body._id
     const newProject = await Project.create({
       name: req.body.name,
       author: req.user._id,
@@ -9,6 +12,7 @@ export const createProject = async (req, res) => {
       developers: req.body.developers,
       techStack: req.body.techStack,
       githubLink: req.body.githubLink,
+      authorUserName: req.user.username,
     });
 
     res.status(201).json({
@@ -144,6 +148,24 @@ export const deleteMyProject = async (req, res) => {
     });
   } catch (err) {
     res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+//get all projeect where author id is the smae as params id
+export const getProjectsByAuthorId = async (req, res) => {
+  try {
+    const projects = await Project.find({ author: req.params.id });
+    res.status(200).json({
+      status: "success",
+      data: {
+        projects,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
       status: "fail",
       message: err.message,
     });

@@ -119,3 +119,26 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
+//getMe
+
+export const getMe = async (req, res) => {
+  console.log("got it");
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};

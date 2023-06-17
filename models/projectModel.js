@@ -7,17 +7,19 @@ const projectSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please provide your project name"],
-    unique: true,
+    unique: [true, "Project with this name already exists"],
     maxlength: [
       20,
       "A project name must have less or equal then 20 characters",
     ],
-    minlength: [5, "A project name must have more or equal then 5 characters"],
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  authorUserName: {
+    type: String,
   },
   description: {
     type: String,

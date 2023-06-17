@@ -11,14 +11,9 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+  res.cookie("jwt", token, {
     httpOnly: true,
-  };
-  if (process.env.NODE_ENV == "production") cookieOptions.secure = true;
-  res.cookie("jwt", token, cookieOptions);
+  });
   user.password = undefined;
   res.status(statusCode).json({
     status: "success",
@@ -29,6 +24,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 export const signup = async (req, res) => {
+  console.log("received");
   try {
     const newUser = await User.create({
       email: req.body.email,
@@ -39,7 +35,8 @@ export const signup = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: err.message,
+      message:
+        err.code === 11000 ? "Username or email already exists" : err.message,
     });
   }
 };
@@ -68,7 +65,6 @@ export const login = async (req, res) => {
 };
 
 export const protect = async (req, res, next) => {
-  //1) Getting token and check if its there
   try {
     let token;
     if (
@@ -92,6 +88,7 @@ export const protect = async (req, res, next) => {
     req.user = freshUser;
     next();
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       status: "fail",
       message: err.message,
