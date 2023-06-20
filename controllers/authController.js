@@ -24,7 +24,6 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 export const signup = async (req, res) => {
-  console.log("received");
   try {
     const newUser = await User.create({
       email: req.body.email,
@@ -78,7 +77,6 @@ export const protect = async (req, res, next) => {
     }
     //2) Verification Validate token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    console.log(decoded);
     //3) Check if user still exists
     const freshUser = await User.findById(decoded.id);
     if (!freshUser) {
@@ -88,7 +86,6 @@ export const protect = async (req, res, next) => {
     req.user = freshUser;
     next();
   } catch (err) {
-    console.log(err);
     res.status(400).json({
       status: "fail",
       message: err.message,

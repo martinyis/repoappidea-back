@@ -2,7 +2,6 @@ import Project from "./../models/projectModel.js";
 import { filterObj } from "./userController.js";
 import User from "../models/userModel.js";
 export const createProject = async (req, res) => {
-  console.log("Creating");
   try {
     //fidn username by req.body._id
     const newProject = await Project.create({
@@ -142,7 +141,6 @@ export const updateMyProject = async (req, res) => {
 
 //delete my project by id
 export const deleteMyProject = async (req, res) => {
-  console.log("I am here");
   try {
     const project = await Project.findById(req.params.id);
     if (project.author.toString() !== req.user._id.toString()) {
