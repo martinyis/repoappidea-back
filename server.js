@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-process.on("uncaughtException", (err) => {
-  console.log("UNCAUGHT EXEPTION");
-  console.log(err.name, err.message);
-  process.exit(1);
-});
+// process.on("uncaughtException", (err) => {
+//   console.log("UNCAUGHT EXEPTION");
+//   console.log(err.name, err.message);
+//   process.exit(1);
+// });
 // dotenv.config({ path: "./.env.development.local" });
 import app from "./app.js";
 
@@ -20,13 +20,13 @@ mongoose.connect(DB).then((con) => {
 
 //==========================DB info===========================//
 const port = process.env.PORT || 8000;
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-process.on("unhandledRejection", (err) => {
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
-});
+// process.on("unhandledRejection", (err) => {
+//   console.log(err.name, err.message);
+//   server.close(() => {
+//     process.exit(1);
+//   });
+// });
