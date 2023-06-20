@@ -22,11 +22,12 @@ const userSchema = new mongoose.Schema({
   description: {
     type: String,
     maxlength: [
-      400,
-      "A description must have less or equal then 400 characters",
+      700,
+      "A description must have less or equal then 700 characters",
     ],
     minlength: [10, "A description must have more or equal then 10 characters"],
     default: "Description",
+    trim: true,
   },
   username: {
     type: String,
@@ -66,8 +67,7 @@ const userSchema = new mongoose.Schema({
   },
   avatarUrl: {
     type: String,
-    default:
-      "https://res.cloudinary.com/dxkufsejm/image/upload/v1620220366/avatars/default-avatar.png",
+    default: "https://www.example-nonexistent-link.com",
     validate: [validator.isURL, "Link is not valid"],
   },
   password: {

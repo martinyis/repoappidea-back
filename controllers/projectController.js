@@ -2,14 +2,14 @@ import Project from "./../models/projectModel.js";
 import { filterObj } from "./userController.js";
 import User from "../models/userModel.js";
 export const createProject = async (req, res) => {
-  console.log("came here");
+  console.log("Creating");
   try {
     //fidn username by req.body._id
     const newProject = await Project.create({
       name: req.body.name,
       author: req.user._id,
       description: req.body.description,
-      developers: req.body.developers,
+      developers: req.body.positionsNeeded,
       techStack: req.body.techStack,
       githubLink: req.body.githubLink,
       authorUserName: req.user.username,
@@ -35,11 +35,18 @@ export const likeProject = async (req, res) => {
     const { id } = req.params;
     //find project by this id
     const project = await Project.findById(id);
-    //check if if above already exist in projetc.usersLiked, if yes, then dont changed object if does not exist then add id to usersLiked array
+    //check if if above already exist in projetc.usersLiked, if yes, then delete him from list if doesn not the add
     if (project.usersLiked.includes(req.user._id)) {
-      res.status(400).json({
-        status: "fail",
-        message: "You already liked this project",
+      project.usersLiked = project.usersLiked.filter(
+        (id) => id.toString() !== req.user._id.toString()
+      );
+      await project.save();
+      res.status(200).json({
+        status: "success",
+        data: {
+          project,
+          liked: project.usersLiked.includes(req.user._id),
+        },
       });
     } else {
       project.usersLiked.push(req.user._id);
@@ -135,6 +142,7 @@ export const updateMyProject = async (req, res) => {
 
 //delete my project by id
 export const deleteMyProject = async (req, res) => {
+  console.log("I am here");
   try {
     const project = await Project.findById(req.params.id);
     if (project.author.toString() !== req.user._id.toString()) {

@@ -9,8 +9,8 @@ const projectSchema = new mongoose.Schema({
     required: [true, "Please provide your project name"],
     unique: [true, "Project with this name already exists"],
     maxlength: [
-      20,
-      "A project name must have less or equal then 20 characters",
+      50,
+      "A project name must have less or equal then 50 characters",
     ],
   },
   author: {
@@ -23,12 +23,10 @@ const projectSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    maxlength: [
-      150,
-      "A project name must have less or equal then 20 characters",
-    ],
+    maxlength: [700, "A project description must less then 700 characters"],
     minlength: [10, "A project name must have more or equal then 5 characters"],
     default: "This is project from github",
+    trim: true,
   },
   developers: {
     type: [String],

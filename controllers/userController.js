@@ -123,7 +123,6 @@ export const deleteUser = async (req, res) => {
 //getMe
 
 export const getMe = async (req, res) => {
-  console.log("got it");
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
