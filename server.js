@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 //   console.log(err.name, err.message);
 //   process.exit(1);
 // });
-// dotenv.config({ path: "./.env.development.local" });
+dotenv.config({ path: "./.env.development.local" });
 import app from "./app.js";
 
 //==========================DB info===========================//
