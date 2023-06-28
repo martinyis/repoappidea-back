@@ -2,6 +2,7 @@ import { promisify } from "util";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import User from "./../models/userModel.js";
+import { OAuth2Client } from "google-auth-library";
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -22,6 +23,38 @@ const createSendToken = (user, statusCode, res) => {
       user,
     },
   });
+};
+
+export const googlelogin = async (req, res) => {
+  const client = new OAuth2Client(process.env.CLIENT_ID);
+  const { authId } = req.body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: authId,
+      audience: process.env.CLIENT_ID,
+    });
+    const { name, email, picture, at_hash } = ticket.getPayload();
+    let existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      createSendToken(existingUser, 200, res);
+    } else {
+      //get a user4anme as evrythin in email before @
+      const username = email.split("@")[0];
+      const newUser = await User.create({
+        email: email,
+        password: at_hash,
+        username: username,
+        avatarUrl: picture,
+        fullname: name,
+      });
+      createSendToken(newUser, 201, res);
+    }
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
 };
 export const signup = async (req, res) => {
   try {
